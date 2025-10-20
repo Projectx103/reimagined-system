@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Professional Slot Raffle - Admin Login</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+ <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&display=swap');
+    
+    * {
+      font-family: 'Orbitron', sans-serif;
+    }
+    
+    body {
+      background: linear-gradient(135deg, #0a0e27 0%, #1a1f3a 100%);
+      min-height: 100vh;
+    }
+    
+    .neon-text {
+      text-shadow: 
+        0 0 10px #00ff88,
+        0 0 20px #00ff88,
+        0 0 30px #00ff88,
+        0 0 40px #00ff88,
+        0 0 70px #00ff88;
+      color: #00ff88;
+    }
+    
+    .login-container {
+      background: linear-gradient(180deg, #1a1a2e 0%, #16213e 100%);
+      border: 2px solid #00ff88;
+      box-shadow: 0 0 30px rgba(0, 255, 136, 0.3);
+    }
+    
+    .input-field {
+      background: rgba(255, 255, 255, 0.05);
+      border: 2px solid #00ff88;
+      color: white;
+    }
+    
+    .input-field::placeholder {
+      color: rgba(0, 255, 136, 0.5);
+    }
+    
+    .input-field:focus {
+      outline: none;
+      border-color: #00ff88;
+      box-shadow: 0 0 15px rgba(0, 255, 136, 0.5);
+    }
+    
+    .login-btn {
+      background: linear-gradient(135deg, #00ff88 0%, #00cc6a 100%);
+      color: #0a0e27;
+      font-weight: bold;
+      transition: all 0.3s ease;
+    }
+    
+    .login-btn:hover:not(:disabled) {
+      transform: scale(1.02);
+      box-shadow: 0 0 30px rgba(0, 255, 136, 0.6);
+    }
+    
+    .login-btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+    
+    .error-message {
+      background: rgba(255, 52, 52, 0.2);
+      border: 2px solid #ff3434;
+      color: #ff6666;
+    }
+    
+    .success-message {
+      background: rgba(0, 255, 136, 0.2);
+      border: 2px solid #00ff88;
+      color: #00ff88;
+    }
+  </style>
+</head>
+<body>
+<div class="min-h-screen flex items-center justify-center p-4">
+  <div class="w-full max-w-md">
+    <div class="text-center mb-12">
+      <h1 class="text-5xl font-black neon-text mb-2">SLOT RAFFLE</h1>
+      <p class="text-gray-400">ADMIN LOGIN</p>
+    </div>
+
+    <div class="login-container rounded-2xl p-8 mb-6">
+      <form id="loginForm">
+        <div class="mb-6">
+          <label class="block text-gray-300 text-sm font-bold mb-3">EMAIL</label>
+          <input
+            type="email"
+            id="loginEmail"
+            placeholder="admin@example.com"
+            class="input-field w-full px-4 py-3 rounded-lg"
+            required
+          />
+        </div>
+
+        <div class="mb-6">
+          <label class="block text-gray-300 text-sm font-bold mb-3">PASSWORD</label>
+          <input
+            type="password"
+            id="loginPassword"
+            placeholder="••••••••"
+            class="input-field w-full px-4 py-3 rounded-lg"
+            required
+          />
+        </div>
+
+        <div id="loginMessage" class="mb-4 p-3 rounded hidden text-sm"></div>
+
+        <button
+          type="submit"
+          class="login-btn w-full py-3 rounded-lg font-bold text-lg transition"
+        >
+          LOGIN
+        </button>
+      </form>
+    </div>
+
+    <div class="text-center">
+      <p class="text-gray-400 mb-3">Don't have an account?</p>
+      <a href="signup.html" class="text-green-400 font-bold hover:text-green-300 transition">
+        SIGN UP HERE
+      </a>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Initialize Firebase
+  const firebaseConfig = {
+    apiKey: "AIzaSyA0os6xPPS29j_iqDuYSd9aMW7pOovNuG0",
+    authDomain: "randomize-games-shuffling.firebaseapp.com",
+    projectId: "randomize-games-shuffling",
+    storageBucket: "randomize-games-shuffling.firebasestorage.app",
+    messagingSenderId: "527934386467",
+    appId: "1:527934386467:web:eef28bc366288ec83e1c96"
+  };
+
+  firebase.initializeApp(firebaseConfig);
+  const auth = firebase.auth();
+  const db = firebase.firestore();
+
+  const loginForm = document.getElementById('loginForm');
+  const loginMessage = document.getElementById('loginMessage');
+
+  loginForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    
+    const email = document.getElementById('loginEmail').value;
+    const password = document.getElementById('loginPassword').value;
+
+    const submitBtn = loginForm.querySelector('button');
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'LOGGING IN...';
+
+    try {
+      // Sign in with Firebase Auth
+      const userCredential = await auth.signInWithEmailAndPassword(email, password);
+      const user = userCredential.user;
+
+      // Check if user account is approved
+      const userDoc = await db.collection('users').doc(user.uid).get();
+      
+      if (!userDoc.exists) {
+        throw new Error('User profile not found');
+      }
+
+      const userData = userDoc.data();
+
+      if (!userData.approved) {
+        // Sign out if not approved
+        await auth.signOut();
+        showMessage('Your account is pending admin approval. Please wait for approval.', 'error');
+      } else {
+        // Account approved, redirect to dashboard
+        showMessage('Login successful! Redirecting...', 'success');
+        localStorage.setItem('adminUID', user.uid);
+        setTimeout(() => {
+          window.location.href = 'Random Slot Machine 1ST REV.html';
+        }, 1500);
+      }
+    } catch (error) {
+      showMessage(error.message, 'error');
+    } finally {
+      submitBtn.disabled = false;
+      submitBtn.textContent = 'LOGIN';
+    }
+  });
+
+  function showMessage(msg, type) {
+    loginMessage.textContent = msg;
+    loginMessage.className = `p-3 rounded text-sm ${type === 'error' ? 'error-message' : 'success-message'}`;
+  }
+
+  // Check if already logged in
+  auth.onAuthStateChanged((user) => {
+    if (user) {
+      db.collection('users').doc(user.uid).get().then((doc) => {
+        if (doc.exists && doc.data().approved) {
+          window.location.href = 'Random Slot Machine 1ST REV.html';
+        }
+      });
+    }
+  });
+</script>
+</body>
+</html>
