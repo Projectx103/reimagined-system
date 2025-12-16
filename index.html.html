@@ -1,0 +1,1021 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Budget Master - Never worry about money again</title>
+<!-- Firebase SDKs -->
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-analytics-compat.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            color: #19223C;
+            overflow-x: hidden;
+        }
+
+        /* Navigation */
+        nav {
+            background: linear-gradient(135deg, #4D65FF 0%, #5B47E0 100%);
+            padding: 1rem 2rem;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #FFF5E6;
+            text-decoration: none;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: #FFF5E6;
+            text-decoration: none;
+            font-weight: 500;
+            transition: opacity 0.3s;
+        }
+
+        .nav-links a:hover {
+            opacity: 0.8;
+        }
+
+        .cta-button {
+            background: #7FD888;
+            color: #19223C;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(127, 216, 136, 0.4);
+        }
+
+        /* Hero Section */
+.hero {
+    background: linear-gradient(135deg, #4D65FF 0%, #5B47E0 100%);
+    padding: 4rem 2rem 8rem;
+    position: relative;
+    overflow: hidden;
+    min-height: 500px;
+}
+
+.hero::after {
+    content: '';
+    position: absolute;
+    bottom: -50px;
+    left: -10%;
+    width: 120%;
+    height: 300px;
+    background: #7FD888;
+    transform: rotate(-3deg);
+    z-index: 0;
+}
+
+.hero-cream-wave {
+    position: absolute;
+    bottom: -50px;
+    left: -10%;
+    width: 120%;
+    height: 250px;
+    background: #FFF5E6;
+    transform: rotate(-3deg);
+    z-index: 1;
+}
+
+.hero-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4rem;
+    align-items: center;
+    position: relative;
+    z-index: 2;
+}
+
+.hero-content h1 {
+    font-size: 3.5rem;
+    color: #FFFFFF;
+    margin-bottom: 1.5rem;
+    line-height: 1.1;
+    font-weight: 700;
+}
+
+.hero-content p {
+    font-size: 1.5rem;
+    color: #FFFFFF;
+    margin-bottom: 2rem;
+    font-style: italic;
+}
+
+        .hero-button {
+            background: #7FD888;
+            color: #19223C;
+            padding: 1rem 2rem;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1.1rem;
+            display: inline-block;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .hero-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(127, 216, 136, 0.4);
+        }
+
+        .hero-subtext {
+            margin-top: 1rem;
+            font-size: 0.9rem;
+            color: #FFF5E6;
+        }
+
+        .hero-image {
+            position: relative;
+            text-align: center;
+        }
+
+.hero-image-wrapper {
+    position: relative;
+    display: inline-block;
+    width: 100%;
+    max-width: 600px;
+    height: 500px;
+}
+
+
+
+
+.floating-money {
+    max-width: 100%;
+    height: auto;
+    position: absolute;
+    z-index: 10;
+    top: 0;
+    left: 0;
+}
+.floating-phone {
+    position: relative;
+    width: 100%;
+    height: auto;
+    z-index: 1;
+    animation: float 3s ease-in-out infinite;
+    filter: drop-shadow(0 20px 40px rgba(0, 0, 0, 0.3));
+    margin: 0 auto;
+    display: block;
+}
+
+       @keyframes float {
+    0%, 100% {
+        transform: translateY(0px);
+    }
+    50% {
+        transform: translateY(-15px);
+    }
+}
+
+        /* Social Proof Section */
+        .social-proof {
+            background: #FFF5E6;
+            padding: 3rem 2rem;
+        }
+
+        .social-proof-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: center;
+            gap: 3rem;
+        }
+
+        .logo-item {
+            opacity: 0.6;
+            transition: opacity 0.3s;
+            font-weight: 600;
+            color: #4D65FF;
+        }
+
+        .logo-item:hover {
+            opacity: 1;
+        }
+
+        /* Stats Section */
+        .stats {
+            background: #FFF5E6;
+            padding: 4rem 2rem;
+        }
+
+        .stats-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .stat-card {
+            background: #B8E5BD;
+            padding: 2.5rem;
+            border-radius: 12px;
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 3.5rem;
+            font-weight: bold;
+            color: #19223C;
+            margin-bottom: 1rem;
+        }
+
+        .stat-description {
+            font-size: 1.1rem;
+            color: #19223C;
+        }
+
+        .stats-note {
+            text-align: center;
+            margin-top: 2rem;
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        /* Quote Section */
+        .quote-section {
+            background: #FFE8B3;
+            padding: 4rem 2rem;
+        }
+
+        .quote-container {
+            max-width: 900px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .quote-text {
+            font-size: 1.8rem;
+            font-weight: 500;
+            color: #19223C;
+            margin-bottom: 1.5rem;
+            line-height: 1.4;
+        }
+
+        .quote-text span {
+            background: linear-gradient(180deg, transparent 60%, #d4d5ff 60%);
+            padding: 0 0.2rem;
+        }
+
+        .quote-attribution {
+            font-size: 1.1rem;
+            color: #19223C;
+        }
+
+        /* Why It Works Section */
+        .why-works {
+            background: #FFF5E6;
+            padding: 5rem 2rem;
+            position: relative;
+        }
+
+        .why-works-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+        }
+
+        .why-works h2 {
+            font-size: 2.5rem;
+            margin-bottom: 2rem;
+            color: #19223C;
+        }
+
+        .feature-list {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+
+        .feature-item {
+            display: flex;
+            gap: 1.5rem;
+        }
+
+.feature-icon {
+    width: 60px;
+    height: 60px;
+    background: transparent;  /* Changed from #B8E5BD */
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    flex-shrink: 0;
+}
+
+        .feature-content h3 {
+            font-size: 1.3rem;
+            margin-bottom: 0.5rem;
+            color: #19223C;
+        }
+
+        .feature-content p {
+            color: #666;
+            line-height: 1.6;
+        }
+
+        .device-image {
+            text-align: center;
+        }
+
+        .device-image img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 12px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+        }
+
+        /* Testimonials Section */
+        .testimonials {
+            background: #FFF5E6;
+            padding: 5rem 2rem;
+        }
+
+        .testimonials-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .testimonials h2 {
+            font-size: 2.5rem;
+            text-align: center;
+            margin-bottom: 1rem;
+            color: #19223C;
+        }
+
+        .testimonials-subtitle {
+            text-align: center;
+            font-size: 1.2rem;
+            margin-bottom: 3rem;
+            color: #666;
+        }
+
+        .testimonial-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+        }
+
+        .testimonial-card {
+            padding: 2rem;
+            border-radius: 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .testimonial-card.blue {
+            background: #E8EEFF;
+        }
+
+        .testimonial-card.green {
+            background: #B8E5BD;
+        }
+
+        .testimonial-card.purple {
+            background: #D1C4F9;
+        }
+
+        .testimonial-quote {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #19223C;
+            margin-bottom: 0.5rem;
+        }
+
+        .testimonial-text {
+            color: #19223C;
+            line-height: 1.6;
+        }
+
+        .testimonial-author {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-top: auto;
+        }
+
+        .author-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: #4D65FF;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+
+        .author-info .name {
+            font-weight: 600;
+            color: #19223C;
+        }
+
+        .author-info .meta {
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        /* Goals Section */
+        .goals {
+            background: #FFF5E6;
+            padding: 5rem 2rem;
+        }
+
+        .goals-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .goals h2 {
+            font-size: 2.5rem;
+            text-align: center;
+            margin-bottom: 1rem;
+            color: #19223C;
+        }
+
+        .goals-subtitle {
+            text-align: center;
+            font-size: 1.3rem;
+            margin-bottom: 3rem;
+            color: #666;
+        }
+
+        .goals-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+        }
+
+        .goal-card {
+            background: #B8E5BD;
+            padding: 2rem;
+            border-radius: 12px;
+            text-align: center;
+            transition: transform 0.3s, box-shadow 0.3s;
+            cursor: pointer;
+        }
+
+        .goal-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+.goal-icon {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+        .goal-card h3 {
+            font-size: 1.3rem;
+            margin-bottom: 1rem;
+            color: #19223C;
+        }
+
+        .goal-link {
+            color: #4D65FF;
+            text-decoration: none;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        /* Final CTA Section */
+        .final-cta {
+            background: linear-gradient(135deg, #4D65FF 0%, #5B47E0 100%);
+            padding: 5rem 2rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .final-cta-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+        }
+
+        .final-cta-content h2 {
+            font-size: 2.5rem;
+            color: #FFF5E6;
+            margin-bottom: 1.5rem;
+        }
+
+        .final-cta-content p {
+            color: #FFF5E6;
+            font-size: 1.1rem;
+            line-height: 1.6;
+            margin-bottom: 2rem;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .button-secondary {
+            background: transparent;
+            color: #FFF5E6;
+            padding: 1rem 2rem;
+            border: 2px solid #FFF5E6;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .button-secondary:hover {
+            background: #FFF5E6;
+            color: #4D65FF;
+        }
+
+        .cta-image {
+            text-align: center;
+        }
+
+        .cta-image img {
+            max-width: 100%;
+            height: auto;
+        }
+
+        /* Footer */
+        footer {
+            background: #19223C;
+            color: #FFF5E6;
+            padding: 3rem 2rem 2rem;
+        }
+
+        .footer-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 3rem;
+            margin-bottom: 3rem;
+        }
+
+        .footer-column h4 {
+            margin-bottom: 1.5rem;
+            color: #FFF5E6;
+        }
+
+        .footer-column ul {
+            list-style: none;
+        }
+
+        .footer-column ul li {
+            margin-bottom: 0.75rem;
+        }
+
+        .footer-column a {
+            color: #B8E5BD;
+            text-decoration: none;
+            transition: opacity 0.3s;
+        }
+
+        .footer-column a:hover {
+            opacity: 0.7;
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(255, 245, 230, 0.1);
+            color: #B8E5BD;
+            font-size: 0.9rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 968px) {
+            .nav-links {
+                display: none;
+            }
+
+            .hero-container,
+            .why-works-container,
+            .final-cta-container {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+
+            .hero-content h1 {
+                font-size: 2.5rem;
+            }
+
+            .stats-grid,
+            .testimonial-grid,
+            .footer-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav>
+        <div class="nav-container">
+            <a href="#" class="logo">Budget Master</a>
+            <ul class="nav-links">
+                <li><a href="#features">Features</a></li>
+                <li><a href="#pricing">Pricing</a></li>
+                <li><a href="#learn">Learn</a></li>
+                <li><a href="#share">Share</a></li>
+            </ul>
+            <a href="#" class="cta-button">Start Your Free Trial</a>
+        </div>
+    </nav>
+
+   <section class="hero">
+    <div class="hero-cream-wave"></div>
+    <div class="hero-container">
+        <div class="hero-content">
+            <h1>Worried about money? You might be bad with money.</h1>
+            <p>Get Budget Master and never worry about money again.</p>
+            <a href="#" class="hero-button">Start Your Free Trial</a>
+            <p class="hero-subtext">It's easy! No credit card required.</p>
+        </div>
+        <div class="hero-image">
+            <div class="hero-image-wrapper">
+                <img src="https://cdn.prod.website-files.com/640f69143ec11b21d42015c6/6502e96f8b7ff92feac8c8ab_8f4df614c4e37b06ccda5279439473b1_hero-phone.avif" alt="An illustrated version of the Budget Master app on a mobile device" class="floating-phone">
+                <img src="https://cdn.prod.website-files.com/640f69143ec11b21d42015c6/672188c512264aa81f920114_flying_money_narrow_firefly_hero.svg" alt="Money flying around" class="floating-money">
+            </div>
+        </div>
+    </div>
+</section>
+
+    <!-- Social Proof -->
+    <section class="social-proof">
+        <div class="social-proof-container">
+            <div class="logo-item">Forbes</div>
+            <div class="logo-item">The New York Times</div>
+            <div class="logo-item">Real Simple</div>
+            <div class="logo-item">Wired</div>
+            <div class="logo-item">Wall Street Journal</div>
+            <div class="logo-item">Entrepreneur</div>
+        </div>
+    </section>
+
+    <!-- Stats Section -->
+    <section class="stats">
+        <div class="stats-container">
+            <h2 style="text-align: center; font-size: 2rem; margin-bottom: 1rem;">We're #1 for a reason...</h2>
+            <p style="text-align: center; color: #666; margin-bottom: 2rem;">(and not just because our mom said so.)</p>
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-number">90%</div>
+                    <div class="stat-description">say their finances are in a better place since starting Budget Master*</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">91%</div>
+                    <div class="stat-description">say Budget Master has changed the way they think about money*</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">70%</div>
+                    <div class="stat-description">of Budget Master users could live for 3 months or more on savings*</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">93%</div>
+                    <div class="stat-description">have recommended Budget Master to friends or family*</div>
+                </div>
+            </div>
+            <p class="stats-note">*based on survey responses</p>
+        </div>
+    </section>
+
+    <!-- Quote Section -->
+    <section class="quote-section">
+        <div class="quote-container">
+            <div class="quote-text">
+                <span>"Budget Master isn't just a tool for money management. It's a tool for self-actualization. Who do you want to be, and how can the money you earn help you get there?"</span>
+            </div>
+            <div class="quote-attribution">
+                <strong>Adrienne So,</strong><br>
+                Senior Associate Reviews Editor for <em>WIRED</em>
+            </div>
+        </div>
+    </section>
+
+    <!-- Why It Works -->
+    <section class="why-works">
+        <div class="why-works-container">
+            <div>
+                <h2>Why Budget Master Works</h2>
+                <div class="feature-list">
+                    <div class="feature-item">
+    <div class="feature-icon">
+        <img src="https://cdn.prod.website-files.com/640f69143ec11b21d42015c6/670dd77222e896a0e4630a9e_Laptop_treelogo_Blurple_outline%20(1).svg" alt="Laptop icon" style="width: 100%; height: 100%;">
+    </div>
+    <div class="feature-content">
+        <h3>Learn our secret sauce</h3>
+        <p>Our method has only one ingredient: Give every dollar a job. We'll teach you how.</p>
+    </div>
+</div>
+<div class="feature-item">
+    <div class="feature-icon">
+        <img src="https://cdn.prod.website-files.com/640f69143ec11b21d42015c6/6740cd7a2b401ce6a38c37db_Map_blurple_outline%20(1).svg" alt="Map icon" style="width: 100%; height: 100%;">
+    </div>
+    <div class="feature-content">
+        <h3>Fund your wildest dreams...and your water bill</h3>
+        <p>Our app will guide you through the process of making a flexible, proactive plan to have what you need and get what you want.</p>
+    </div>
+</div>
+<div class="feature-item">
+    <div class="feature-icon">
+        <img src="https://cdn.prod.website-files.com/640f69143ec11b21d42015c6/6740cda4e04b618f084a2306_Kite_Blurple_outline.svg" alt="Kite icon" style="width: 100%; height: 100%;">
+    </div>
+    <div class="feature-content">
+        <h3>Get good with money</h3>
+        <p>Improve relationships, sleep better at night, and achieve your goals by learning to use your money to live a life you can love.</p>
+    </div>
+</div>
+                </div>
+                <div style="margin-top: 2rem;">
+                    <a href="#" class="hero-button">Start Your Free 34 Day Trial</a>
+                </div>
+            </div>
+            <div class="device-image">
+                <img src="https://cdn.prod.website-files.com/640f69143ec11b21d42015c6/6754d6950a834d8433241515_e3ea8d230f1a9f58459f2ce511ddd14b_app_devices_lineup_blurple%20%282%29.avif" alt="Budget Master app on multiple devices">
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials -->
+    <section class="testimonials">
+        <div class="testimonials-container">
+            <h2>The average user saves $600 in their first month and $6,000 their first year</h2>
+            <p class="testimonials-subtitle">And we don't like to play favorites or anything, but you seem well above average to us.</p>
+            <div class="testimonial-grid">
+                <div class="testimonial-card blue">
+                    <div>
+                        <p class="testimonial-quote">I realized that money was a tool that would help me create my dream life.</p>
+                        <p class="testimonial-text">Budget Master truly helped me buy freedom from a toxic relationship, the flexibility to spend time with my kids, and the ability to pursue my biggest dreams.</p>
+                    </div>
+                    <div class="testimonial-author">
+                        <div class="author-avatar">K</div>
+                        <div class="author-info">
+                            <div class="name">Kathryn</div>
+                            <div class="meta">Budget Master user since 2015</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="testimonial-card green">
+                    <div>
+                        <p class="testimonial-quote">I went from living paycheck to paycheck, to having $42K saved in one year.</p>
+                        <p class="testimonial-text">Budget Master has removed the stress of money from my life and in doing so has helped make me a better husband.</p>
+                    </div>
+                    <div class="testimonial-author">
+                        <div class="author-avatar">K</div>
+                        <div class="author-info">
+                            <div class="name">Kyle</div>
+                            <div class="meta">Budget Master user since 2020</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="testimonial-card purple">
+                    <div>
+                        <p class="testimonial-quote">I slayed $30K of debt, reclaimed my freedom, and now I'm living wild and free.</p>
+                        <p class="testimonial-text">I now live a life of empowered spending and am headed for an early retirement, knowing I'll never have to compromise my values for a paycheck.</p>
+                    </div>
+                    <div class="testimonial-author">
+                        <div class="author-avatar">W</div>
+                        <div class="author-info">
+                            <div class="name">Wave</div>
+                            <div class="meta">Budget Master user since 2015</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Goals Section -->
+    <section class="goals">
+        <div class="goals-container">
+            <h2>What will you accomplish with Budget Master?</h2>
+            <p class="goals-subtitle">I want to...</p>
+            <div class="goals-grid">
+               <div class="goal-card">
+    <div class="goal-icon">
+        <img src="https://cdn.prod.website-files.com/640f69143ec11b21d42015c6/6740cde14a6316daddc5616c_checklist_meadow_outline.svg" alt="Checklist" style="width: 60px; height: 60px;">
+    </div>
+    <h3>Feel organized about my finances</h3>
+    <a href="#" class="goal-link">Enjoy Adulthood →</a>
+</div>
+<div class="goal-card">
+    <div class="goal-icon">
+        <img src="https://cdn.prod.website-files.com/640f69143ec11b21d42015c6/6740ce14a8178a89ae9f5b47_potted_plant_meadow_outline.svg" alt="Plant" style="width: 60px; height: 60px;">
+    </div>
+    <h3>Be less stressed about money</h3>
+    <a href="#" class="goal-link">Make Change →</a>
+</div>
+<div class="goal-card">
+    <div class="goal-icon">
+        <img src="https://cdn.prod.website-files.com/640f69143ec11b21d42015c6/6740ce3f7002b69a20a21611_holding-hands_meadow%20(1).svg" alt="Holding hands" style="width: 60px; height: 60px;">
+    </div>
+    <h3>Stop arguing about money with my partner</h3>
+    <a href="#" class="goal-link">Conquer Conflict →</a>
+</div>
+<div class="goal-card">
+    <div class="goal-icon">
+        <img src="https://cdn.prod.website-files.com/640f69143ec11b21d42015c6/6740ce834f7999f67b70ea8d_credit-card_meadow_outline%20(3).svg" alt="Credit card" style="width: 60px; height: 60px;">
+    </div>
+    <h3>Pay off debt and stay out for good</h3>
+    <a href="#" class="goal-link">Destroy Debt →</a>
+</div>
+<div class="goal-card">
+    <div class="goal-icon">
+        <img src="https://cdn.prod.website-files.com/640f69143ec11b21d42015c6/672428bb74922677cd491cf7_piggy_bank_meadow_outline%20(1).svg" alt="Piggy bank" style="width: 60px; height: 60px;">
+    </div>
+    <h3>Save more money without feeling restricted</h3>
+    <a href="#" class="goal-link">Save Yourself →</a>
+</div>
+<div class="goal-card">
+    <div class="goal-icon">
+        <img src="https://cdn.prod.website-files.com/640f69143ec11b21d42015c6/6740cec19ebb64c45731b7d4_Calendar_meadow_outline.svg" alt="Calendar" style="width: 60px; height: 60px;">
+    </div>
+    <h3>Have money saved for next month</h3>
+    <a href="#" class="goal-link">Build a Buffer →</a>
+</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Final CTA -->
+    <section class="final-cta">
+        <div class="final-cta-container">
+            <div class="cta-image">
+                <img src="https://cdn.prod.website-files.com/66e349fd9a49a032bc6ee14f/6754ddc1969ac796cf2a0659_65d789c0cfa540f6b9ba98795a7f6184_img_app_blob_firefly_realsimple%20%281%29.avif" alt="Systemly app">
+            </div>
+            <div class="final-cta-content">
+                <h2>Get Budget Master. Get Good with Money.</h2>
+                <p>You put so much effort into making money, shouldn't you invest the same time, attention, and care into spending it? Budget Master helps you get good with money so you never have to worry about money again.</p>
+                <div class="button-group">
+                    <a href="#" class="hero-button">Start Your Free Trial</a>
+                    <a href="#" class="button-secondary">Browse Features</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-container">
+            <div class="footer-grid">
+                <div class="footer-column">
+                    <h4>What Is Budget Master?</h4>
+                    <ul>
+                        <li><a href="#">The App</a></li>
+                        <li><a href="#">The Method</a></li>
+                        <li><a href="#">Why Budget Master Is Different</a></li>
+                        <li><a href="#">Our 34-Day Trial</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h4>Learn</h4>
+                    <ul>
+                        <li><a href="#">Free Workshops</a></li>
+                        <li><a href="#">Blog</a></li>
+                        <li><a href="#">Guides</a></li>
+                        <li><a href="#">Help Center</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h4>Company</h4>
+                    <ul>
+                        <li><a href="#">About</a></li>
+                        <li><a href="#">Careers</a></li>
+                        <li><a href="#">Press</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h4>Legal</h4>
+                    <ul>
+                        <li><a href="#">Terms</a></li>
+                        <li><a href="#">Security</a></li>
+                        <li><a href="#">Privacy Policy</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>Copyright © 2025, Budget Master. All Rights Reserved.</p>
+            </div>
+        </div>
+    </footer>
+<script>
+  // Firebase Configuration
+  const firebaseConfig = {
+    apiKey: "AIzaSyA1txE-ewGSTwVrNk7gVz3z8yLeYTdwYwk",
+    authDomain: "budget-monitoringv2.firebaseapp.com",
+    projectId: "budget-monitoringv2",
+    storageBucket: "budget-monitoringv2.firebasestorage.app",
+    messagingSenderId: "539949688092",
+    appId: "1:539949688092:web:0655e0318504c6a4e946d9",
+    measurementId: "G-M8DLXRV0DW"
+  };
+
+  // Initialize Firebase
+  firebase.initializeApp(firebaseConfig);
+  const analytics = firebase.analytics();
+
+  // Track page view
+  analytics.logEvent('page_view', {
+    page_title: document.title,
+    page_location: window.location.href,
+    page_path: window.location.pathname
+  });
+
+  // Track button clicks
+  document.querySelectorAll('.cta-button, .hero-button, .button-secondary').forEach(button => {
+    button.addEventListener('click', function(e) {
+      analytics.logEvent('cta_click', {
+        button_text: this.textContent.trim(),
+        button_location: this.className
+      });
+    });
+  });
+
+  // Track navigation clicks
+  document.querySelectorAll('.nav-links a').forEach(link => {
+    link.addEventListener('click', function(e) {
+      analytics.logEvent('nav_click', {
+        link_text: this.textContent.trim()
+      });
+    });
+  });
+
+  // Track goal card clicks
+  document.querySelectorAll('.goal-card').forEach(card => {
+    card.addEventListener('click', function(e) {
+      const goalTitle = this.querySelector('h3').textContent;
+      analytics.logEvent('goal_interest', {
+        goal_name: goalTitle
+      });
+    });
+  });
+
+  // Track time on page
+  let startTime = Date.now();
+  window.addEventListener('beforeunload', function() {
+    const timeSpent = Math.round((Date.now() - startTime) / 1000);
+    analytics.logEvent('time_on_page', {
+      duration_seconds: timeSpent
+    });
+  });
+</script>
+</body>
+</html>
